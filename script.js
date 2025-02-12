@@ -72,5 +72,17 @@ const currencies = new Map([
 ]);
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+containerMovements.innerHTML = "";
+movements.forEach((ele, idx) => {
+  console.log(ele, idx);
+  const type = ele > 0 ? "deposit" : "withdrawal";
+  const html = `<div class="movements__row">
+          <div class="movements__type movements__type--${type}">${
+    idx + 1
+  } ${type}</div>
+          <div class="movements__value">${ele}</div>
+        </div>`;
+  containerMovements.insertAdjacentHTML("afterbegin", html);
+});
 
 /////////////////////////////////////////////////
