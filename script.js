@@ -71,18 +71,32 @@ const currencies = new Map([
   ["GBP", "Pound sterling"],
 ]);
 
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-containerMovements.innerHTML = "";
-movements.forEach((ele, idx) => {
-  console.log(ele, idx);
-  const type = ele > 0 ? "deposit" : "withdrawal";
-  const html = `<div class="movements__row">
+const calcDisplayMovements = function (movements) {
+  containerMovements.innerHTML = "";
+  movements.forEach((ele, idx) => {
+    console.log(ele, idx);
+    const type = ele > 0 ? "deposit" : "withdrawal";
+    const html = `<div class="movements__row">
           <div class="movements__type movements__type--${type}">${
-    idx + 1
-  } ${type}</div>
+      idx + 1
+    } ${type}</div>
           <div class="movements__value">${ele}</div>
         </div>`;
-  containerMovements.insertAdjacentHTML("afterbegin", html);
-});
+    containerMovements.insertAdjacentHTML("afterbegin", html);
+  });
+};
 
-/////////////////////////////////////////////////
+const calcUsername = function (accounts) {
+  accounts.forEach((account) => {
+    const username = account.owner
+      .split(" ")
+      .map((ownerName) => ownerName[0])
+      .join("")
+      .toLowerCase();
+    account.username = username;
+  });
+};
+
+calcUsername(accounts);
+
+calcDisplayMovements(account1.movements);
