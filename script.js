@@ -80,7 +80,7 @@ const calcDisplayMovements = function (movements) {
           <div class="movements__type movements__type--${type}">${
       idx + 1
     } ${type}</div>
-          <div class="movements__value">${ele}</div>
+          <div class="movements__value">${ele} ₹</div>
         </div>`;
     containerMovements.insertAdjacentHTML("afterbegin", html);
   });
@@ -97,6 +97,11 @@ const calcUsername = function (accounts) {
   });
 };
 
-calcUsername(accounts);
+const computeDisplayTotalBalance = function (movements) {
+  const balance = movements.reduce((acc, movement) => movement + acc, 0);
+  labelBalance.textContent = `${balance}₹`;
+};
 
+calcUsername(accounts);
 calcDisplayMovements(account1.movements);
+computeDisplayTotalBalance(account1.movements);
