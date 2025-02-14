@@ -74,7 +74,6 @@ const currencies = new Map([
 const calcDisplayMovements = function (movements) {
   containerMovements.innerHTML = "";
   movements.forEach((ele, idx) => {
-    console.log(ele, idx);
     const type = ele > 0 ? "deposit" : "withdrawal";
     const html = `<div class="movements__row">
           <div class="movements__type movements__type--${type}">${
@@ -102,6 +101,22 @@ const computeDisplayTotalBalance = function (movements) {
   labelBalance.textContent = `${balance}₹`;
 };
 
+const computeDisplayTotalDeposit = function (movements) {
+  const totalDeposit = movements
+    .filter((movement) => movement > 0)
+    .reduce((acc, amount) => acc + amount, 0);
+  labelSumIn.textContent = `${totalDeposit}₹`;
+};
+
+const computeDisplayTotalWithdrawal = function (movements) {
+  const totalWithdrawal = movements
+    .filter((movement) => movement < 0)
+    .reduce((acc, amount) => acc + amount, 0);
+  labelSumOut.textContent = `${Math.abs(totalWithdrawal)}₹`;
+};
+
 calcUsername(accounts);
 calcDisplayMovements(account1.movements);
 computeDisplayTotalBalance(account1.movements);
+computeDisplayTotalDeposit(account1.movements);
+computeDisplayTotalWithdrawal(account1.movements);
