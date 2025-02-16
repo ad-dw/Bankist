@@ -61,10 +61,6 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// LECTURES
-
 const currencies = new Map([
   ["USD", "United States dollar"],
   ["EUR", "Euro"],
@@ -115,8 +111,17 @@ const computeDisplayTotalWithdrawal = function (movements) {
   labelSumOut.textContent = `${Math.abs(totalWithdrawal)}₹`;
 };
 
+const computeDisplayTotalInterest = function (movements, interest) {
+  let totalInterest = movements
+    .map((movement) => (movement * interest) / 100)
+    .filter((interest) => interest > 1)
+    .reduce((acc, interest) => acc + interest, 0);
+  labelSumInterest.textContent = `${totalInterest}₹`;
+};
+
 calcUsername(accounts);
 calcDisplayMovements(account1.movements);
 computeDisplayTotalBalance(account1.movements);
 computeDisplayTotalDeposit(account1.movements);
 computeDisplayTotalWithdrawal(account1.movements);
+computeDisplayTotalInterest(account1.movements, account1.interestRate);
