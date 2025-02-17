@@ -119,9 +119,31 @@ const computeDisplayTotalInterest = function (movements, interest) {
   labelSumInterest.textContent = `${totalInterest}₹`;
 };
 
+const login = function (event) {
+  event.preventDefault();
+  let username = inputLoginUsername.value;
+  let pin = inputLoginPin.value;
+  let currentUser = null;
+  if (username) {
+    currentUser = accounts.find((ele) => ele.username === username);
+  }
+  if (currentUser) {
+    if (+pin === currentUser.pin) {
+      calcDisplayMovements(currentUser.movements);
+      computeDisplayTotalBalance(currentUser.movements);
+      computeDisplayTotalDeposit(currentUser.movements);
+      computeDisplayTotalWithdrawal(currentUser.movements);
+      computeDisplayTotalInterest(
+        currentUser.movements,
+        currentUser.interestRate
+      );
+    } else {
+      alert("wrong password");
+    }
+  } else {
+    alert("User not found");
+  }
+};
+
 calcUsername(accounts);
-calcDisplayMovements(account1.movements);
-computeDisplayTotalBalance(account1.movements);
-computeDisplayTotalDeposit(account1.movements);
-computeDisplayTotalWithdrawal(account1.movements);
-computeDisplayTotalInterest(account1.movements, account1.interestRate);
+btnLogin.addEventListener("click", login);
