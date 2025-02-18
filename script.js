@@ -119,6 +119,11 @@ const computeDisplayTotalInterest = function (movements, interest) {
   labelSumInterest.textContent = `${totalInterest}₹`;
 };
 
+const computeDisplayCurrentDate = function () {
+  let date = new Date();
+  labelDate.textContent = date.toLocaleDateString("en-US");
+};
+
 const login = function (event) {
   event.preventDefault();
   let username = inputLoginUsername.value;
@@ -137,6 +142,7 @@ const login = function (event) {
         currentUser.movements,
         currentUser.interestRate
       );
+      computeDisplayCurrentDate();
     } else {
       alert("wrong password");
     }
