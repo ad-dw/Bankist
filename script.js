@@ -143,6 +143,8 @@ const login = function (event) {
         currentUser.interestRate
       );
       computeDisplayCurrentDate();
+      containerApp.style.opacity = 1;
+      containerApp.style.height = "auto";
     } else {
       alert("wrong password");
     }

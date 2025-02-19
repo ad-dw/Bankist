@@ -94,7 +94,9 @@ nav {
   gap: 2rem;
 
   /* NOTE This creates the fade in/out anumation */
-  /* opacity: 0; */
+  opacity: 0;
+  height: calc(100% - 15rem);
+  overflow: hidden;
   transition: all 1s;
 }
 
