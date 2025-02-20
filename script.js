@@ -67,9 +67,16 @@ const currencies = new Map([
   ["GBP", "Pound sterling"],
 ]);
 
-const calcDisplayMovements = function (movements) {
+let movementsSorted = false;
+let currentUser = null;
+
+const calcDisplayMovements = function (movements, sort = false) {
+  const sortedMovements = sort
+    ? movements.toSorted((a, b) => a - b)
+    : movements;
+  console.log(sortedMovements);
   containerMovements.innerHTML = "";
-  movements.forEach((ele, idx) => {
+  sortedMovements.forEach((ele, idx) => {
     const type = ele > 0 ? "deposit" : "withdrawal";
     const html = `<div class="movements__row">
           <div class="movements__type movements__type--${type}">${
@@ -128,7 +135,6 @@ const login = function (event) {
   event.preventDefault();
   let username = inputLoginUsername.value;
   let pin = inputLoginPin.value;
-  let currentUser = null;
   if (username) {
     currentUser = accounts.find((ele) => ele.username === username);
   }
@@ -153,5 +159,11 @@ const login = function (event) {
   }
 };
 
+const sortMovements = function () {
+  movementsSorted = !movementsSorted;
+  calcDisplayMovements(currentUser.movements, movementsSorted);
+};
+
 calcUsername(accounts);
 btnLogin.addEventListener("click", login);
+btnSort.addEventListener("click", sortMovements);
