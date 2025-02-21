@@ -131,6 +131,10 @@ const computeDisplayCurrentDate = function () {
   labelDate.textContent = date.toLocaleDateString("en-US");
 };
 
+const displayWelcomeMessage = function () {
+  labelWelcome.textContent = `Welcome! ${currentUser.owner}`;
+};
+
 const login = function (event) {
   event.preventDefault();
   let username = inputLoginUsername.value;
@@ -140,6 +144,7 @@ const login = function (event) {
   }
   if (currentUser) {
     if (+pin === currentUser.pin) {
+      displayWelcomeMessage();
       calcDisplayMovements(currentUser.movements);
       computeDisplayTotalBalance(currentUser.movements);
       computeDisplayTotalDeposit(currentUser.movements);
