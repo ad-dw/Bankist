@@ -169,6 +169,21 @@ const sortMovements = function () {
   calcDisplayMovements(currentUser.movements, movementsSorted);
 };
 
+const closeAccount = function (event) {
+  event.preventDefault();
+  let accountToBeClosed = inputCloseUsername.value;
+  if (accountToBeClosed === currentUser.username) {
+    if (+inputClosePin.value === currentUser.pin) {
+      alert("Account deleted successfully");
+    } else {
+      alert("Pin is not correct");
+    }
+  } else {
+    alert("Account username is wrong!");
+  }
+};
+
 calcUsername(accounts);
 btnLogin.addEventListener("click", login);
 btnSort.addEventListener("click", sortMovements);
+btnClose.addEventListener("click", closeAccount);
