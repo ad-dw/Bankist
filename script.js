@@ -74,7 +74,6 @@ const calcDisplayMovements = function (movements, sort = false) {
   const sortedMovements = sort
     ? movements.toSorted((a, b) => a - b)
     : movements;
-  console.log(sortedMovements);
   containerMovements.innerHTML = "";
   sortedMovements.forEach((ele, idx) => {
     const type = ele > 0 ? "deposit" : "withdrawal";
@@ -169,11 +168,25 @@ const sortMovements = function () {
   calcDisplayMovements(currentUser.movements, movementsSorted);
 };
 
+const deleteAccount = function () {
+  const index = accounts.findIndex(
+    (acc) => acc.username === currentUser.username
+  );
+  accounts.splice(index, 1);
+};
+
+const logout = function () {
+  labelWelcome.textContent = "Log in to get started";
+  containerApp.style.opacity = 0;
+};
+
 const closeAccount = function (event) {
   event.preventDefault();
   let accountToBeClosed = inputCloseUsername.value;
   if (accountToBeClosed === currentUser.username) {
     if (+inputClosePin.value === currentUser.pin) {
+      deleteAccount();
+      logout();
       alert("Account deleted successfully");
     } else {
       alert("Pin is not correct");
