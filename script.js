@@ -134,6 +134,15 @@ const displayWelcomeMessage = function () {
   labelWelcome.textContent = `Welcome! ${currentUser.owner}`;
 };
 
+const updateUI = function () {
+  calcDisplayMovements(currentUser.movements);
+  computeDisplayTotalBalance(currentUser.movements);
+  computeDisplayTotalDeposit(currentUser.movements);
+  computeDisplayTotalWithdrawal(currentUser.movements);
+  computeDisplayTotalInterest(currentUser.movements, currentUser.interestRate);
+  computeDisplayCurrentDate();
+};
+
 const login = function (event) {
   event.preventDefault();
   let username = inputLoginUsername.value;
@@ -144,15 +153,7 @@ const login = function (event) {
   if (currentUser) {
     if (+pin === currentUser.pin) {
       displayWelcomeMessage();
-      calcDisplayMovements(currentUser.movements);
-      computeDisplayTotalBalance(currentUser.movements);
-      computeDisplayTotalDeposit(currentUser.movements);
-      computeDisplayTotalWithdrawal(currentUser.movements);
-      computeDisplayTotalInterest(
-        currentUser.movements,
-        currentUser.interestRate
-      );
-      computeDisplayCurrentDate();
+      updateUI();
       containerApp.style.opacity = 1;
       containerApp.style.height = "auto";
     } else {
@@ -196,7 +197,30 @@ const closeAccount = function (event) {
   }
 };
 
+const checkLoanEligibility = function (event) {
+  event.preventDefault();
+  const loanAmount = +inputLoanAmount.value;
+  if (loanAmount <= 0) {
+    alert("Invalid Amount!");
+    return;
+  }
+  const isEligible = currentUser.movements.some(
+    (ele) => ele >= loanAmount * 0.1
+  );
+  if (isEligible) {
+    let accIdx = accounts.findIndex(
+      (ele) => ele.username === currentUser.username
+    );
+    accounts[accIdx].movements.push(loanAmount);
+    inputLoanAmount.value = "";
+    updateUI();
+  } else {
+    alert("I'm sorry. You aren't eligible !");
+  }
+};
+
 calcUsername(accounts);
 btnLogin.addEventListener("click", login);
 btnSort.addEventListener("click", sortMovements);
 btnClose.addEventListener("click", closeAccount);
+btnLoan.addEventListener("click", checkLoanEligibility);
