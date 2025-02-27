@@ -81,7 +81,7 @@ const calcDisplayMovements = function (movements, sort = false) {
           <div class="movements__type movements__type--${type}">${
       idx + 1
     } ${type}</div>
-          <div class="movements__value">${ele} ₹</div>
+          <div class="movements__value">${Math.abs(ele).toFixed(2)} ₹</div>
         </div>`;
     containerMovements.insertAdjacentHTML("afterbegin", html);
   });
@@ -100,21 +100,21 @@ const calcUsername = function (accounts) {
 
 const computeDisplayTotalBalance = function (movements) {
   const balance = movements.reduce((acc, movement) => movement + acc, 0);
-  labelBalance.textContent = `${balance}₹`;
+  labelBalance.textContent = `${balance.toFixed(2)}₹`;
 };
 
 const computeDisplayTotalDeposit = function (movements) {
   const totalDeposit = movements
     .filter((movement) => movement > 0)
     .reduce((acc, amount) => acc + amount, 0);
-  labelSumIn.textContent = `${totalDeposit}₹`;
+  labelSumIn.textContent = `${totalDeposit.toFixed(2)}₹`;
 };
 
 const computeDisplayTotalWithdrawal = function (movements) {
   const totalWithdrawal = movements
     .filter((movement) => movement < 0)
     .reduce((acc, amount) => acc + amount, 0);
-  labelSumOut.textContent = `${Math.abs(totalWithdrawal)}₹`;
+  labelSumOut.textContent = `${Math.abs(totalWithdrawal).toFixed(2)}₹`;
 };
 
 const computeDisplayTotalInterest = function (movements, interest) {
@@ -122,7 +122,7 @@ const computeDisplayTotalInterest = function (movements, interest) {
     .map((movement) => (movement * interest) / 100)
     .filter((interest) => interest > 1)
     .reduce((acc, interest) => acc + interest, 0);
-  labelSumInterest.textContent = `${totalInterest}₹`;
+  labelSumInterest.textContent = `${totalInterest.toFixed(2)}₹`;
 };
 
 const computeDisplayCurrentDate = function () {
@@ -152,6 +152,8 @@ const login = function (event) {
   }
   if (currentUser) {
     if (+pin === currentUser.pin) {
+      inputLoginUsername.value = "";
+      inputLoginPin.value = "";
       displayWelcomeMessage();
       updateUI();
       containerApp.style.opacity = 1;
