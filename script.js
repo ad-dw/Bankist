@@ -7,28 +7,148 @@
 // Data
 const account1 = {
   owner: "Jonas Schmedtmann",
-  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
+  movements: [
+    {
+      amount: 200,
+      date: "2019-11-18T21:31:17.178Z",
+    },
+    {
+      amount: 459,
+      date: "2019-12-23T07:42:02.383Z",
+    },
+    {
+      amount: -400,
+      date: "2020-01-28T09:15:04.904Z",
+    },
+    {
+      amount: 3000,
+      date: "2020-04-01T10:17:24.185Z",
+    },
+    {
+      amount: -650,
+      date: "2020-05-08T14:11:59.604Z",
+    },
+    {
+      amount: -130,
+      date: "2020-05-27T17:01:17.194Z",
+    },
+    {
+      amount: 70,
+      date: "2020-07-11T23:36:17.929Z",
+    },
+    {
+      amount: 1300,
+      date: "2020-07-12T10:51:36.790Z",
+    },
+  ],
   interestRate: 1.2, // %
   pin: 1111,
 };
 
 const account2 = {
   owner: "Jessica Davis",
-  movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
+  movements: [
+    {
+      amount: 5000,
+      date: "2019-11-01T13:15:33.035Z",
+    },
+    {
+      amount: 3400,
+      date: "2019-11-30T09:48:16.867Z",
+    },
+    {
+      amount: -150,
+      date: "2019-12-25T06:04:23.907Z",
+    },
+    {
+      amount: -790,
+      date: "2020-01-25T14:18:46.235Z",
+    },
+    {
+      amount: -3210,
+      date: "2020-02-05T16:33:06.386Z",
+    },
+    {
+      amount: -1000,
+      date: "2020-04-10T14:43:26.374Z",
+    },
+    {
+      amount: 8500,
+      date: "2020-06-25T18:49:59.371Z",
+    },
+    {
+      amount: -30,
+      date: "2020-07-26T12:01:20.894Z",
+    },
+  ],
   interestRate: 1.5,
   pin: 2222,
 };
 
 const account3 = {
   owner: "Steven Thomas Williams",
-  movements: [200, -200, 340, -300, -20, 50, 400, -460],
+  movements: [
+    {
+      amount: 200,
+      date: "2019-11-01T13:15:33.035Z",
+    },
+    {
+      amount: -200,
+      date: "2019-11-30T09:48:16.867Z",
+    },
+    {
+      amount: 340,
+      date: "2019-12-25T06:04:23.907Z",
+    },
+    {
+      amount: -300,
+      date: "2020-01-25T14:18:46.235Z",
+    },
+    {
+      amount: -20,
+      date: "2020-02-05T16:33:06.386Z",
+    },
+    {
+      amount: 50,
+      date: "2020-04-10T14:43:26.374Z",
+    },
+    {
+      amount: 400,
+      date: "2020-06-25T18:49:59.371Z",
+    },
+    {
+      amount: -460,
+      date: "2020-07-26T12:01:20.894Z",
+    },
+  ],
   interestRate: 0.7,
   pin: 3333,
 };
 
 const account4 = {
   owner: "Sarah Smith",
-  movements: [430, 1000, 700, 50, 90],
+  movements: [
+    {
+      amount: 430,
+      date: "2019-11-30T09:48:16.867Z",
+    },
+    {
+      amount: 1000,
+      date: "2019-12-25T06:04:23.907Z",
+    },
+    {
+      amount: 700,
+      date: "2020-01-25T14:18:46.235Z",
+    },
+    {
+      amount: 90,
+      date: "2020-02-05T16:33:06.386Z",
+    },
+    {
+      amount: 50,
+      date: "2020-04-10T14:43:26.374Z",
+    },
+  ],
   interestRate: 1,
   pin: 4444,
 };
@@ -70,18 +190,22 @@ const currencies = new Map([
 let movementsSorted = false;
 let currentUser = null;
 
+const sortMovements = function (movements) {
+  return movements.toSorted((a, b) => new Date(b.date) - new Date(a.date));
+};
+
 const calcDisplayMovements = function (movements, sort = false) {
-  const sortedMovements = sort
-    ? movements.toSorted((a, b) => a - b)
-    : movements;
+  const sortedMovements = sort ? sortMovements(movements) : movements;
   containerMovements.innerHTML = "";
   sortedMovements.forEach((ele, idx) => {
-    const type = ele > 0 ? "deposit" : "withdrawal";
+    const type = ele.amount > 0 ? "deposit" : "withdrawal";
+    const movDate = new Date(ele.date).toLocaleDateString();
     const html = `<div class="movements__row">
           <div class="movements__type movements__type--${type}">${
       idx + 1
     } ${type}</div>
-          <div class="movements__value">${Math.abs(ele).toFixed(2)} ₹</div>
+          <div class="movements__date">${movDate}</div>
+          <div class="movements__value">${ele.amount.toFixed(2)} ₹</div>
         </div>`;
     containerMovements.insertAdjacentHTML("afterbegin", html);
   });
@@ -99,27 +223,27 @@ const calcUsername = function (accounts) {
 };
 
 const computeDisplayTotalBalance = function (movements) {
-  const balance = movements.reduce((acc, movement) => movement + acc, 0);
+  const balance = movements.reduce((acc, movement) => movement.amount + acc, 0);
   labelBalance.textContent = `${balance.toFixed(2)}₹`;
 };
 
 const computeDisplayTotalDeposit = function (movements) {
   const totalDeposit = movements
-    .filter((movement) => movement > 0)
-    .reduce((acc, amount) => acc + amount, 0);
+    .filter((movement) => movement.amount > 0)
+    .reduce((acc, mov) => acc + mov.amount, 0);
   labelSumIn.textContent = `${totalDeposit.toFixed(2)}₹`;
 };
 
 const computeDisplayTotalWithdrawal = function (movements) {
   const totalWithdrawal = movements
-    .filter((movement) => movement < 0)
-    .reduce((acc, amount) => acc + amount, 0);
+    .filter((movement) => movement.amount < 0)
+    .reduce((acc, mov) => acc + mov.amount, 0);
   labelSumOut.textContent = `${Math.abs(totalWithdrawal).toFixed(2)}₹`;
 };
 
 const computeDisplayTotalInterest = function (movements, interest) {
   let totalInterest = movements
-    .map((movement) => (movement * interest) / 100)
+    .map((movement) => (movement.amount * interest) / 100)
     .filter((interest) => interest > 1)
     .reduce((acc, interest) => acc + interest, 0);
   labelSumInterest.textContent = `${totalInterest.toFixed(2)}₹`;
@@ -127,7 +251,7 @@ const computeDisplayTotalInterest = function (movements, interest) {
 
 const computeDisplayCurrentDate = function () {
   let date = new Date();
-  labelDate.textContent = date.toLocaleDateString("en-US");
+  labelDate.textContent = date.toLocaleString();
 };
 
 const displayWelcomeMessage = function () {
@@ -166,7 +290,7 @@ const login = function (event) {
   }
 };
 
-const sortMovements = function () {
+const handleSortMovements = function () {
   movementsSorted = !movementsSorted;
   calcDisplayMovements(currentUser.movements, movementsSorted);
 };
@@ -223,6 +347,6 @@ const checkLoanEligibility = function (event) {
 
 calcUsername(accounts);
 btnLogin.addEventListener("click", login);
-btnSort.addEventListener("click", sortMovements);
+btnSort.addEventListener("click", handleSortMovements);
 btnClose.addEventListener("click", closeAccount);
 btnLoan.addEventListener("click", checkLoanEligibility);
