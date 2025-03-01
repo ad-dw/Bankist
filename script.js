@@ -6,7 +6,9 @@
 
 // Data
 const account1 = {
-  owner: "Jonas Schmedtmann",
+  currency: "USD",
+  interestRate: 1.2, // %
+  locale: "en-US",
   movements: [
     {
       amount: 200,
@@ -41,12 +43,14 @@ const account1 = {
       date: "2020-07-12T10:51:36.790Z",
     },
   ],
-  interestRate: 1.2, // %
+  owner: "Jonas Schmedtmann",
   pin: 1111,
 };
 
 const account2 = {
-  owner: "Jessica Davis",
+  currency: "GBP",
+  interestRate: 1.5,
+  locale: "en-GB",
   movements: [
     {
       amount: 5000,
@@ -81,12 +85,14 @@ const account2 = {
       date: "2020-07-26T12:01:20.894Z",
     },
   ],
-  interestRate: 1.5,
+  owner: "Jessica Davis",
   pin: 2222,
 };
 
 const account3 = {
-  owner: "Steven Thomas Williams",
+  currency: "INR",
+  interestRate: 0.7,
+  locale: "hi-IN",
   movements: [
     {
       amount: 200,
@@ -121,12 +127,14 @@ const account3 = {
       date: "2020-07-26T12:01:20.894Z",
     },
   ],
-  interestRate: 0.7,
+  owner: "Steven Thomas Williams",
   pin: 3333,
 };
 
 const account4 = {
-  owner: "Sarah Smith",
+  currency: "KRW",
+  interestRate: 1,
+  locale: "ko-KR",
   movements: [
     {
       amount: 430,
@@ -149,7 +157,7 @@ const account4 = {
       date: "2020-04-10T14:43:26.374Z",
     },
   ],
-  interestRate: 1,
+  owner: "Sarah Smith",
   pin: 4444,
 };
 
@@ -181,14 +189,15 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
-const currencies = new Map([
-  ["USD", "United States dollar"],
-  ["EUR", "Euro"],
-  ["GBP", "Pound sterling"],
-]);
-
 let movementsSorted = false;
 let currentUser = null;
+
+const transformCurrency = function (amount) {
+  return new Intl.NumberFormat(currentUser.locale, {
+    style: "currency",
+    currency: currentUser.currency,
+  }).format(amount);
+};
 
 const sortMovements = function (movements) {
   return movements.toSorted((a, b) => new Date(b.date) - new Date(a.date));
@@ -205,7 +214,9 @@ const calcDisplayMovements = function (movements, sort = false) {
       idx + 1
     } ${type}</div>
           <div class="movements__date">${movDate}</div>
-          <div class="movements__value">${ele.amount.toFixed(2)} ₹</div>
+          <div class="movements__value">${transformCurrency(
+            Math.abs(ele.amount)
+          )}</div>
         </div>`;
     containerMovements.insertAdjacentHTML("afterbegin", html);
   });
@@ -224,21 +235,21 @@ const calcUsername = function (accounts) {
 
 const computeDisplayTotalBalance = function (movements) {
   const balance = movements.reduce((acc, movement) => movement.amount + acc, 0);
-  labelBalance.textContent = `${balance.toFixed(2)}₹`;
+  labelBalance.textContent = `${transformCurrency(balance)}`;
 };
 
 const computeDisplayTotalDeposit = function (movements) {
   const totalDeposit = movements
     .filter((movement) => movement.amount > 0)
     .reduce((acc, mov) => acc + mov.amount, 0);
-  labelSumIn.textContent = `${totalDeposit.toFixed(2)}₹`;
+  labelSumIn.textContent = `${transformCurrency(totalDeposit)}`;
 };
 
 const computeDisplayTotalWithdrawal = function (movements) {
   const totalWithdrawal = movements
     .filter((movement) => movement.amount < 0)
     .reduce((acc, mov) => acc + mov.amount, 0);
-  labelSumOut.textContent = `${Math.abs(totalWithdrawal).toFixed(2)}₹`;
+  labelSumOut.textContent = `${transformCurrency(Math.abs(totalWithdrawal))}`;
 };
 
 const computeDisplayTotalInterest = function (movements, interest) {
@@ -246,7 +257,7 @@ const computeDisplayTotalInterest = function (movements, interest) {
     .map((movement) => (movement.amount * interest) / 100)
     .filter((interest) => interest > 1)
     .reduce((acc, interest) => acc + interest, 0);
-  labelSumInterest.textContent = `${totalInterest.toFixed(2)}₹`;
+  labelSumInterest.textContent = `${transformCurrency(totalInterest)}`;
 };
 
 const computeDisplayCurrentDate = function () {
@@ -331,13 +342,16 @@ const checkLoanEligibility = function (event) {
     return;
   }
   const isEligible = currentUser.movements.some(
-    (ele) => ele >= loanAmount * 0.1
+    (ele) => ele.amount >= loanAmount * 0.1
   );
   if (isEligible) {
     let accIdx = accounts.findIndex(
       (ele) => ele.username === currentUser.username
     );
-    accounts[accIdx].movements.push(loanAmount);
+    accounts[accIdx].movements.push({
+      amount: loanAmount,
+      date: new Date().toISOString(),
+    });
     inputLoanAmount.value = "";
     updateUI();
   } else {
