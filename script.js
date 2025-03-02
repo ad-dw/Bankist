@@ -199,6 +199,18 @@ const transformCurrency = function (amount) {
   }).format(amount);
 };
 
+const transformDate = function (date) {
+  const options = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  };
+  return new Intl.DateTimeFormat(currentUser.locale, options).format(date);
+};
+
 const sortMovements = function (movements) {
   return movements.toSorted((a, b) => new Date(b.date) - new Date(a.date));
 };
@@ -213,7 +225,9 @@ const calcDisplayMovements = function (movements, sort = false) {
           <div class="movements__type movements__type--${type}">${
       idx + 1
     } ${type}</div>
-          <div class="movements__date">${movDate}</div>
+          <div class="movements__date">${transformDate(
+            new Date(ele.date)
+          )}</div>
           <div class="movements__value">${transformCurrency(
             Math.abs(ele.amount)
           )}</div>
@@ -262,7 +276,7 @@ const computeDisplayTotalInterest = function (movements, interest) {
 
 const computeDisplayCurrentDate = function () {
   let date = new Date();
-  labelDate.textContent = date.toLocaleString();
+  labelDate.textContent = transformDate(date);
 };
 
 const displayWelcomeMessage = function () {
