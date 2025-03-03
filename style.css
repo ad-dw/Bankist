@@ -4,6 +4,11 @@
   box-sizing: inherit;
 }
 
+*:focus {
+  outline: 2px solid black !important;
+  outline-offset: 2px;
+}
+
 html {
   font-size: 62.5%;
   box-sizing: border-box;
@@ -70,9 +75,7 @@ nav {
 }
 
 .login__btn:hover,
-.login__btn:focus,
-.btn--sort:hover,
-.btn--sort:focus {
+.btn--sort:hover {
   outline: none;
   color: #777;
 }
@@ -81,6 +84,7 @@ nav {
 .app {
   position: relative;
   max-width: 100rem;
+  padding-bottom: 1rem;
   margin: 4rem auto;
   display: grid;
   grid-template-columns: 4fr 3fr;
@@ -166,7 +170,7 @@ nav {
 .summary {
   grid-row: 5 / 6;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   padding: 0 0.3rem;
   margin-top: 1rem;
 }
@@ -199,6 +203,7 @@ nav {
   font-size: 1.3rem;
   font-weight: 500;
   cursor: pointer;
+  line-height: 2rem;
 }
 
 /* OPERATIONS */
