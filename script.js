@@ -172,7 +172,8 @@ const labelSumOut = document.querySelector(".summary__value--out");
 const labelSumInterest = document.querySelector(".summary__value--interest");
 const labelTimer = document.querySelector(".timer");
 
-const containerApp = document.querySelector(".app");
+const App = document.querySelector(".app");
+const containerApp = document.querySelector(".container-app");
 const containerMovements = document.querySelector(".movements");
 
 const btnLogin = document.querySelector(".login__btn");
@@ -305,7 +306,8 @@ const login = function (event) {
       inputLoginPin.value = "";
       displayWelcomeMessage();
       updateUI();
-      containerApp.style.opacity = 1;
+      App.style.display = "grid";
+      App.style.opacity = 1;
       containerApp.style.height = "auto";
     } else {
       alert("wrong password");
@@ -378,3 +380,4 @@ btnLogin.addEventListener("click", login);
 btnSort.addEventListener("click", handleSortMovements);
 btnClose.addEventListener("click", closeAccount);
 btnLoan.addEventListener("click", checkLoanEligibility);
+inputLoginUsername.focus();
