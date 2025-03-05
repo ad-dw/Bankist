@@ -248,9 +248,11 @@ const calcUsername = function (accounts) {
   });
 };
 
+let totalBalance = 0;
+
 const computeDisplayTotalBalance = function (movements) {
-  const balance = movements.reduce((acc, movement) => movement.amount + acc, 0);
-  labelBalance.textContent = `${transformCurrency(balance)}`;
+  totalBalance = movements.reduce((acc, movement) => movement.amount + acc, 0);
+  labelBalance.textContent = `${transformCurrency(totalBalance)}`;
 };
 
 const computeDisplayTotalDeposit = function (movements) {
@@ -375,9 +377,48 @@ const checkLoanEligibility = function (event) {
   }
 };
 
+const transferMoney = function (event) {
+  event.preventDefault();
+  const userTo = inputTransferTo.value;
+  if (userTo) {
+    let transferTo = accounts.find((ele) => ele.username === userTo);
+    if (transferTo) {
+      let value = +inputTransferAmount.value;
+      if (value > 0) {
+        if (value > totalBalance) {
+          alert("You do not hav sufficient balance", totalBalance);
+        } else {
+          accounts.forEach((ele) => {
+            if (ele.username === transferTo.username) {
+              ele.movements.push({
+                amount: value,
+                date: new Date().toISOString(),
+              });
+            }
+            if (ele.username === currentUser.username) {
+              ele.movements.push({
+                amount: -value,
+                date: new Date().toISOString(),
+              });
+            }
+          });
+        }
+        updateUI();
+      } else {
+        alert("Enter a valid amount");
+      }
+    } else {
+      alert("User does not exist");
+    }
+  } else {
+    alert("Please enter a valid username!");
+  }
+};
+
 calcUsername(accounts);
 btnLogin.addEventListener("click", login);
 btnSort.addEventListener("click", handleSortMovements);
 btnClose.addEventListener("click", closeAccount);
 btnLoan.addEventListener("click", checkLoanEligibility);
+btnTransfer.addEventListener("click", transferMoney);
 inputLoginUsername.focus();
