@@ -175,6 +175,7 @@ const labelTimer = document.querySelector(".timer");
 const App = document.querySelector(".app");
 const containerApp = document.querySelector(".container-app");
 const containerMovements = document.querySelector(".movements");
+const loginForm = document.querySelector(".login");
 
 const btnLogin = document.querySelector(".login__btn");
 const btnTransfer = document.querySelector(".form__btn--transfer");
@@ -293,6 +294,7 @@ const updateUI = function () {
   computeDisplayTotalWithdrawal(currentUser.movements);
   computeDisplayTotalInterest(currentUser.movements, currentUser.interestRate);
   computeDisplayCurrentDate();
+  loginForm.style.visibility = "hidden";
 };
 
 const login = function (event) {
@@ -308,6 +310,7 @@ const login = function (event) {
       inputLoginPin.value = "";
       displayWelcomeMessage();
       updateUI();
+      checkUserActivity();
       App.style.display = "grid";
       App.style.opacity = 1;
       containerApp.style.height = "auto";
@@ -334,6 +337,8 @@ const deleteAccount = function () {
 const logout = function () {
   labelWelcome.textContent = "Log in to get started";
   containerApp.style.opacity = 0;
+  clearInterval(logOutTimer);
+  // clearInterval(checkActiveUser);
 };
 
 const closeAccount = function (event) {
@@ -375,6 +380,36 @@ const checkLoanEligibility = function (event) {
   } else {
     alert("I'm sorry. You aren't eligible !");
   }
+};
+
+// let logOutTimer;
+// let checkActiveUser;
+let activeUser = true;
+
+// const shoulTimerStart = function () {
+//   return (!activeUser && !logOutTimer) || logOutTimer;
+// };
+
+// const startLogoutTimer = function () {
+//   let time = 10;
+//   logOutTimer = setInterval(() => {
+//     let mins = (Math.trunc(time / 60) + "").padStart(2, 0);
+//     let secs = ((time % 60) + "").padStart(2, 0);
+//     if (time === 0) {
+//       clearInterval(logOutTimer);
+//       labelTimer.textContent = "00:00";
+//     } else {
+//       labelTimer.textContent = `${mins}:${secs}`;
+//       time--;
+//     }
+//   }, 1000);
+// };
+
+const checkUserActivity = function () {
+  checkActiveUser = setInterval(() => {
+    activeUser = navigator.userActivation.isActive;
+    console.log(activeUser);
+  }, 1000);
 };
 
 const transferMoney = function (event) {
