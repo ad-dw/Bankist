@@ -294,7 +294,6 @@ const updateUI = function () {
   computeDisplayTotalWithdrawal(currentUser.movements);
   computeDisplayTotalInterest(currentUser.movements, currentUser.interestRate);
   computeDisplayCurrentDate();
-  loginForm.style.visibility = "hidden";
 };
 
 const login = function (event) {
@@ -314,6 +313,7 @@ const login = function (event) {
       App.style.display = "grid";
       App.style.opacity = 1;
       containerApp.style.height = "auto";
+      loginForm.style.visibility = "hidden";
     } else {
       alert("wrong password");
     }
@@ -336,9 +336,9 @@ const deleteAccount = function () {
 
 const logout = function () {
   labelWelcome.textContent = "Log in to get started";
-  containerApp.style.opacity = 0;
-  clearInterval(logOutTimer);
-  // clearInterval(checkActiveUser);
+  App.style.display = "none";
+  containerApp.style.height = "calc(100vh - 10rem)";
+  loginForm.style.visibility = "visible";
 };
 
 const closeAccount = function (event) {
@@ -382,33 +382,44 @@ const checkLoanEligibility = function (event) {
   }
 };
 
-// let logOutTimer;
-// let checkActiveUser;
+let logOutTimer;
+let checkActiveUser;
 let activeUser = true;
 
-// const shoulTimerStart = function () {
-//   return (!activeUser && !logOutTimer) || logOutTimer;
-// };
+const handleTimerLogout = function () {
+  clearInterval(logOutTimer);
+  clearInterval(checkActiveUser);
+  logOutTimer = undefined;
+  labelTimer.textContent = "00:00";
+  logout();
+};
 
-// const startLogoutTimer = function () {
-//   let time = 10;
-//   logOutTimer = setInterval(() => {
-//     let mins = (Math.trunc(time / 60) + "").padStart(2, 0);
-//     let secs = ((time % 60) + "").padStart(2, 0);
-//     if (time === 0) {
-//       clearInterval(logOutTimer);
-//       labelTimer.textContent = "00:00";
-//     } else {
-//       labelTimer.textContent = `${mins}:${secs}`;
-//       time--;
-//     }
-//   }, 1000);
-// };
+const startLogoutTimer = function () {
+  if (logOutTimer) return;
+  let time = 10;
+  logOutTimer = setInterval(() => {
+    let mins = (Math.trunc(time / 60) + "").padStart(2, 0);
+    let secs = ((time % 60) + "").padStart(2, 0);
+    if (time === 0) {
+      handleTimerLogout();
+    } else {
+      labelTimer.textContent = `${mins}:${secs}`;
+      time--;
+    }
+  }, 1000);
+};
 
 const checkUserActivity = function () {
   checkActiveUser = setInterval(() => {
     activeUser = navigator.userActivation.isActive;
-    console.log(activeUser);
+    if (!activeUser) {
+      startLogoutTimer();
+    } else {
+      if (logOutTimer) {
+        clearInterval(logOutTimer);
+        logOutTimer = undefined;
+      }
+    }
   }, 1000);
 };
 
