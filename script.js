@@ -396,7 +396,7 @@ const handleTimerLogout = function () {
 
 const startLogoutTimer = function () {
   if (logOutTimer) return;
-  let time = 10;
+  let time = 600;
   logOutTimer = setInterval(() => {
     let mins = (Math.trunc(time / 60) + "").padStart(2, 0);
     let secs = ((time % 60) + "").padStart(2, 0);
@@ -418,6 +418,7 @@ const checkUserActivity = function () {
       if (logOutTimer) {
         clearInterval(logOutTimer);
         logOutTimer = undefined;
+        labelTimer.textContent = "00:00";
       }
     }
   }, 1000);
