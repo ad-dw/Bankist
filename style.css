@@ -19,6 +19,7 @@ body {
   color: #444;
   background-color: #f3f3f3;
   height: 100vh;
+  width: 100vw;
   padding: 2rem;
 }
 
@@ -304,4 +305,24 @@ footer {
   width: 100%;
   background-color: #d4d3d3;
   padding: 0.5rem;
+}
+
+@media screen and (max-width: 800px) {
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, auto) repeat(3, 15rem) auto;
+  }
+
+  .balance {
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  .movements {
+    grid-row: 2;
+  }
+
+  .summary {
+    grid-row: 3;
+  }
 }
