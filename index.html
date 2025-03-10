@@ -86,7 +86,12 @@
           <form class="form form--transfer">
             <input type="text" class="form__input form__input--to" />
             <input type="number" class="form__input form__input--amount" />
-            <button class="form__btn form__btn--transfer">&rarr;</button>
+            <button
+              class="form__btn form__btn--transfer"
+              aria-label="Transfer amount"
+            >
+              &rarr;
+            </button>
             <label class="form__label">Transfer to</label>
             <label class="form__label">Amount</label>
           </form>
@@ -97,7 +102,9 @@
           <h2>Request loan</h2>
           <form class="form form--loan">
             <input type="number" class="form__input form__input--loan-amount" />
-            <button class="form__btn form__btn--loan">&rarr;</button>
+            <button class="form__btn form__btn--loan" aria-label="Request Loan">
+              &rarr;
+            </button>
             <label class="form__label form__label--loan">Amount</label>
           </form>
         </div>
@@ -112,7 +119,12 @@
               maxlength="6"
               class="form__input form__input--pin"
             />
-            <button class="form__btn form__btn--close">&rarr;</button>
+            <button
+              class="form__btn form__btn--close"
+              aria-label="Close account"
+            >
+              &rarr;
+            </button>
             <label class="form__label">Confirm user</label>
             <label class="form__label">Confirm PIN</label>
           </form>
