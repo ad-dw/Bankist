@@ -450,6 +450,8 @@ const transferMoney = function (event) {
             }
           });
         }
+        inputTransferTo.value = "";
+        inputTransferAmount.value = "";
         updateUI();
       } else {
         alert("Enter a valid amount");
