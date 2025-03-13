@@ -313,7 +313,7 @@ const login = function (event) {
       App.style.display = "grid";
       App.style.opacity = 1;
       containerApp.style.height = "auto";
-      loginForm.style.visibility = "hidden";
+      loginForm.style.display = "none";
     } else {
       alert("wrong password");
     }
@@ -338,7 +338,7 @@ const logout = function () {
   labelWelcome.textContent = "Log in to get started";
   App.style.display = "none";
   containerApp.style.height = "calc(100vh - 10rem)";
-  loginForm.style.visibility = "visible";
+  loginForm.style.display = "block";
 };
 
 const closeAccount = function (event) {
